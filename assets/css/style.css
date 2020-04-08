@@ -1,0 +1,17 @@
+.card-header{
+color: white;
+background-color: rgb(54, 54, 54);
+padding: 10px;
+font-size: 64px;
+margin-bottom: 10px;
+border-color:none;
+}
+
+#weather-icon {
+    width: 10%;
+    height: 10%;
+  }
+
+#weather-content{
+font-size: 24px;
+}
