@@ -35,19 +35,20 @@ $(document).ready(function () {
             type: "GET",
         }).then(function (response) {
             $("#current-cond").empty();
+            var headerInfo = $("#current-city");
             var currentConditions = $("#current-cond");
-            var cityName = $("<p>")
-                .attr("id", "weather-header")
+
+            var cityName = $("<div>")
+                .attr("id", "card-header")
                 .text(response.name + ": ");
             var dateTime = $("<span>").text(currentDay);
+
+            cityName.append(dateTime);
+            headerInfo.append(cityName);
+
             var weatherIcon = $("<img>")
-                .attr("id", "weather-icon")
-                .attr(
-                    "src",
-                    "https://openweathermap.org/img/w/" +
-                    response.weather[0].icon +
-                    ".png"
-                );
+                .attr("id", "weather-icon-large")
+                .attr("src", "https://openweathermap.org/img/w/" + response.weather[0].icon + ".png");
             var windSpeed = $("<p>")
                 .attr("id", "weather-description")
                 .text("Wind Speed: " + response.wind.speed + "MPH");
@@ -60,15 +61,13 @@ $(document).ready(function () {
             var latitude = response.coord.lat;
             var longitude = response.coord.lon;
             // append HTML elements
-            cityName.append(dateTime);
+
             currentConditions.append(
-                cityName,
                 weatherIcon,
                 temperature,
                 humidity,
                 windSpeed
             );
-            $("#weather-content").append(currentConditions);
         });
 
         var latitude = 33.7490;
@@ -81,14 +80,31 @@ $(document).ready(function () {
             var uvIndex = $("<p>")
                 .attr("id", "weather-description")
                 .text("UV Index: " + response.value);
+                .attr("value", response.value);
             var currentConditions = $("#current-cond");
+            console.log(attribute.getAttribute(response.value));
 
-            currentConditions.append(
-                uvIndex,
-            );
-            $("#weather-content").append(currentConditions);
+            // if (uvIndex.response.value >= 11) {
+            //     uvIndex.attr("status","extremely-high")
+            // }
+            // if (uvIndex.response.value >= 8|| uvIndex.response.value <= 10) {
+            //     uvIndex.attr("status","very-high")
+            // }
+            // if (uvIndex.response.value >= 6|| uvIndex.response.value <= 7) {
+            //     uvIndex.attr("status","high")
+            // }
+            // if (uvIndex.response.value >= 3|| uvIndex.response.value <= 5) {
+            //     uvIndex.attr("status","medium")
+            // }
+            // if (uvIndex.response.value <= 2) {
+            //     uvIndex.attr("status","low")
+            // }
+            // else{
+            //     uvIndex.attr("status","na")
 
-            // invoke other functions within the runWeather function
+            // }
+            // console.log(uvIndex.response.value);
+            currentConditions.append(uvIndex);
 
         });
         runWeatherFiveDay(locationSearched);
@@ -107,8 +123,8 @@ $(document).ready(function () {
                     // create HTML elements
                     var fiveDayForecastCard = $("<div>").addClass("card");
                     var formattedDate = moment(response.list[i].dt_txt).format("l");
-                    var fiveDayDate = $("<span>").text(formattedDate);
-                    var fiveDayIcon = $("<img>").attr("id", "weather-icon").attr(
+                    var fiveDayDate = $("<span>").text(formattedDate).addClass("card-subheader");
+                    var fiveDayIcon = $("<img>").attr("id", "weather-icon-small").attr(
                         "src",
                         "https://openweathermap.org/img/w/" +
                         response.list[i].weather[0].icon +

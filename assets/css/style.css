@@ -1,17 +1,37 @@
 .card-header{
-color: white;
-background-color: rgb(54, 54, 54);
+color: 	rgba(7, 0, 0, 0.933);
+background-color: #dfb228;
 padding: 10px;
-font-size: 64px;
-margin-bottom: 10px;
-border-color:none;
+font-size: 36px;
 }
+h4{
+  background-color: #809ea1;
+  background-color: #dfb228;
 
-#weather-icon {
+margin:0;
+}
+.card-subheader{
+  color: 	rgba(7, 0, 0, 0.933);
+  background-color: #dd8826;
+padding: 10px;
+font-size: 18px;
+}
+#weather-icon-large {
     width: 10%;
     height: 10%;
   }
-
+#weather-icon-small {
+  width: 30%;
+  height: 30%;
+}
 #weather-content{
 font-size: 24px;
+}
+#city-btn{
+
+  background-color: #60c96c;
+}
+#weather-header{
+  background-color: #809ea1;
+
 }
