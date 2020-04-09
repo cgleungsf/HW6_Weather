@@ -14,9 +14,9 @@ $(document).ready(function () {
         event.preventDefault();
         var locationSearched = $("#location-search").val().trim();
         runWeather(locationSearched);
-
+        // $("#location-search").empty();
         var listCities = $("<button>").text(locationSearched).attr("id", "city-btn").attr("value", locationSearched);
-        
+
         var storage = [];
         storage = $("#storedCities").append(listCities);
         localStorage.setItem("search", JSON.stringify(storage));
@@ -31,6 +31,16 @@ $(document).ready(function () {
     //     runWeatherFiveDay($(this).text());
     // });
 
+    $("#city-btn").on("click", "button", function () {
+        console.log("test");
+        runWeather($(this).text());
+        runWeatherFiveDay($(this).text());
+    });
+
+    $("#clear-btn").on("click", function () {
+        localStorage.clear();
+        $("#storedCities").empty();
+    });
     // main current weather card
     function runWeather(locationSearched = "Atlanta") {
         //api request from https://openweathermap.org/api
