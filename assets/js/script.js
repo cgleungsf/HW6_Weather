@@ -1,5 +1,7 @@
-let storage = JSON.parse(localStorage.getItem("search"))
 $(document).ready(function () {
+    var storageCheck = localStorage.getItem("search");
+    console.log(storageCheck);//put at beginning of doc
+
     //setting date
     var currentDay = moment().format("LL");
 
@@ -14,19 +16,21 @@ $(document).ready(function () {
         runWeather(locationSearched);
 
         var listCities = $("<button>").text(locationSearched).attr("id", "city-btn").attr("value", locationSearched);
-        var storage = $("#storedCities").append(listCities);
+        
+        var storage = [];
+        storage = $("#storedCities").append(listCities);
         localStorage.setItem("search", JSON.stringify(storage));
         console.log(storage);
+        console.log(storageCheck);//put at beginning of doc
 
     });
-    $("#city-btn").on("click", function () {
-        var storedCity = $(this).data('value');
-        console.log(storedCity);
-        event.preventDefault();
-        runWeather(locationSearched);
 
+    // $("#city-btn").click(function(){
+    //     event.preventDefault();
+    //     runWeather($(this).text());
+    //     runWeatherFiveDay($(this).text());
+    // });
 
-    });
     // main current weather card
     function runWeather(locationSearched = "Atlanta") {
         //api request from https://openweathermap.org/api
@@ -35,6 +39,7 @@ $(document).ready(function () {
             type: "GET",
         }).then(function (response) {
             $("#current-cond").empty();
+            $("#current-city").empty();
             var headerInfo = $("#current-city");
             var currentConditions = $("#current-cond");
 
@@ -68,46 +73,42 @@ $(document).ready(function () {
                 humidity,
                 windSpeed
             );
-        });
 
-        var latitude = 33.7490;
-        var longitude = -84.3880;
+            $.ajax({
+                url: `http://api.openweathermap.org/data/2.5/uvi?appid=c2fe04dee27b4f7a9328f2a4cade163a&lat=${latitude}&lon=${longitude}`,
+                type: "GET",
+            }).then(function (response) {
+                var bgColor;
+                if (response.value >= 0) {
+                    bgColor = "PaleGreen";
+                }
+                if (response.value >= 3) {
+                    bgColor = "yellow";
+                }
+                if (response.value >= 6) {
+                    bgColor = "orange";
+                }
+                if (response.value >= 8) {
+                    bgColor = "LightCoral";
+                }
+                if (response.value >= 11) {
+                    bgColor = "Plum";
+                }
+                var uvIndexTitle = $("<p>")
+                    .attr("id", "weather-description")
+                    .text("UV Index: ")
+                    .appendTo($(".card-body"));
+                $("<span>")
+                    .css("background-color", bgColor)
+                    .text(response.value)
+                    .addClass("uv")
+                    .appendTo(uvIndexTitle);
 
-        $.ajax({
-            url: `http://api.openweathermap.org/data/2.5/uvi?appid=c2fe04dee27b4f7a9328f2a4cade163a&lat=${latitude}&lon=${longitude}`,
-            type: "GET",
-        }).then(function (response) {
-            var uvIndex = $("<p>")
-                .attr("id", "weather-description")
-                .text("UV Index: " + response.value);
-                .attr("value", response.value);
-            var currentConditions = $("#current-cond");
-            console.log(attribute.getAttribute(response.value));
-
-            // if (uvIndex.response.value >= 11) {
-            //     uvIndex.attr("status","extremely-high")
-            // }
-            // if (uvIndex.response.value >= 8|| uvIndex.response.value <= 10) {
-            //     uvIndex.attr("status","very-high")
-            // }
-            // if (uvIndex.response.value >= 6|| uvIndex.response.value <= 7) {
-            //     uvIndex.attr("status","high")
-            // }
-            // if (uvIndex.response.value >= 3|| uvIndex.response.value <= 5) {
-            //     uvIndex.attr("status","medium")
-            // }
-            // if (uvIndex.response.value <= 2) {
-            //     uvIndex.attr("status","low")
-            // }
-            // else{
-            //     uvIndex.attr("status","na")
-
-            // }
-            // console.log(uvIndex.response.value);
-            currentConditions.append(uvIndex);
+                runWeatherFiveDay(locationSearched);
+            });
 
         });
-        runWeatherFiveDay(locationSearched);
+
     }
 
     // 5 day forecast
