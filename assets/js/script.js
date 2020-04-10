@@ -1,7 +1,14 @@
 $(document).ready(function () {
-    var storageCheck = localStorage.getItem("search");
-    console.log(storageCheck);//put at beginning of doc
-
+    var local_storage = localStorage.getItem("search") || [];
+    if (local_storage.length) {
+        console.log(local_storage);
+        local_storage = local_storage.split(",");
+        console.log(typeof local_storage);
+        for (var i = 0; i < local_storage.length; i++) {
+            var listCities = $("<button>").text(local_storage[i]).addClass("city-btn").attr("value", local_storage[i]);
+            $("#storedCities").append(listCities);
+        }
+    }
     //setting date
     var currentDay = moment().format("LL");
 
@@ -9,37 +16,35 @@ $(document).ready(function () {
     runWeather();
     runWeatherFiveDay();
 
+    var storage = [];
+
     // search button click
     $("#search-btn").on("click", function (event) {
         event.preventDefault();
+        localStorage.clear();
+
         var locationSearched = $("#location-search").val().trim();
         runWeather(locationSearched);
         // $("#location-search").empty();
-        var listCities = $("<button>").text(locationSearched).attr("id", "city-btn").attr("value", locationSearched);
-
-        var storage = [];
-        storage = $("#storedCities").append(listCities);
-        localStorage.setItem("search", JSON.stringify(storage));
+        var listCities = $("<button>").text(locationSearched).addClass("city-btn").attr("value", locationSearched);
+        $("#storedCities").append(listCities);
         console.log(storage);
-        console.log(storageCheck);//put at beginning of doc
+
+        storage.push(locationSearched);
+        localStorage.setItem("search", storage);
 
     });
-
-    // $("#city-btn").click(function(){
-    //     event.preventDefault();
-    //     runWeather($(this).text());
-    //     runWeatherFiveDay($(this).text());
-    // });
-
-    $("#city-btn").on("click", "button", function () {
-        console.log("test");
+    $(document).on("click", ".city-btn", function () {
         runWeather($(this).text());
         runWeatherFiveDay($(this).text());
     });
 
     $("#clear-btn").on("click", function () {
+        storage = [];
         localStorage.clear();
         $("#storedCities").empty();
+
+        console.log(window.localStorage);
     });
     // main current weather card
     function runWeather(locationSearched = "Atlanta") {

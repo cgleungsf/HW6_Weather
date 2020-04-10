@@ -41,7 +41,7 @@ h4 {
 #weather-content {
   font-size: 24px;
 }
-#city-btn {
+.city-btn {
   background-color: #f9fad1;
   border-radius: .25rem;
   border: 1px solid rgba(133, 133, 133, 0.712);
