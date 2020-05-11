@@ -1,9 +1,7 @@
 $(document).ready(function () {
     var local_storage = localStorage.getItem("search") || [];
     if (local_storage.length) {
-        console.log(local_storage);
         local_storage = local_storage.split(",");
-        console.log(typeof local_storage);
         for (var i = 0; i < local_storage.length; i++) {
             var listCities = $("<button>").text(local_storage[i]).addClass("city-btn").attr("value", local_storage[i]);
             $("#storedCities").append(listCities);
@@ -13,7 +11,7 @@ $(document).ready(function () {
     var currentDay = moment().format("LL");
 
     // default load for Atlanda
-    runWeather();
+    runWeather(local_storage[0]);
     runWeatherFiveDay();
 
     var storage = [];
@@ -22,18 +20,16 @@ $(document).ready(function () {
     $("#search-btn").on("click", function (event) {
         event.preventDefault();
         localStorage.clear();
-
+        console.log("searchclick")
         var locationSearched = $("#location-search").val().trim();
         runWeather(locationSearched);
         // $("#location-search").empty();
         var listCities = $("<button>").text(locationSearched).addClass("city-btn").attr("value", locationSearched);
         $("#storedCities").append(listCities);
-        console.log(storage);
-
         storage.push(locationSearched);
         localStorage.setItem("search", storage);
-
     });
+
     $(document).on("click", ".city-btn", function () {
         runWeather($(this).text());
         runWeatherFiveDay($(this).text());
@@ -46,6 +42,7 @@ $(document).ready(function () {
 
         console.log(window.localStorage);
     });
+
     // main current weather card
     function runWeather(locationSearched = "Atlanta") {
         //api request from https://openweathermap.org/api
@@ -81,7 +78,6 @@ $(document).ready(function () {
             var latitude = response.coord.lat;
             var longitude = response.coord.lon;
             // append HTML elements
-
             currentConditions.append(
                 weatherIcon,
                 temperature,
@@ -90,7 +86,7 @@ $(document).ready(function () {
             );
 
             $.ajax({
-                url: `http://api.openweathermap.org/data/2.5/uvi?appid=c2fe04dee27b4f7a9328f2a4cade163a&lat=${latitude}&lon=${longitude}`,
+                url: `https://api.openweathermap.org/data/2.5/uvi?appid=c2fe04dee27b4f7a9328f2a4cade163a&lat=${latitude}&lon=${longitude}`,
                 type: "GET",
             }).then(function (response) {
                 var bgColor;
